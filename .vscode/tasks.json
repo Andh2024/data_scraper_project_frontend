@@ -1,0 +1,15 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Bundle for Submission",
+            "type": "shell",
+            "problemMatcher": [],
+            "command": "git bundle create ${workspaceFolderBasename}.bundle --all",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        }
+    ]
+}
