@@ -1,6 +1,6 @@
 !! Change this document for your own project by removing the placeholder text, adding your own text, adding helpful sections etc. etc. !!
 
-# <Project Title>
+# Data Scraper Project Frontend
 
 In a few sentences describe what your project is trying to solve.
 
@@ -16,17 +16,13 @@ Explain what the user has to type to get started with your solution. Which one
 is the main Python file? In the simplest case, this could look something like
 this:
 
-``
-    python main.py
-``
+`    python main.py`
 
 In other cases the user might first have to install some project dependencies
 first has to run something like this (a sample requirements.txt file is also
 included in the project template):
 
-``
-    pip install -r requirements.txt
-``
+`    pip install -r requirements.txt`
 
 ## Understanding the sources
 
