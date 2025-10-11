@@ -3,27 +3,26 @@
 
 <head>
     <meta charset="UTF-8">
-
     <title>Price Hunter</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background: #ebe1e1;
             background: linear-gradient(0deg, rgba(235, 225, 225, 1) 0%, rgba(255, 255, 255, 1) 100%);
-            display: flex; 
+
+
+            display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
         }
 
         form {
-            justify-content: center;
             background: white;
             padding: 2rem;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 320px;
-            margin: 10px;
         }
 
         label {
@@ -76,7 +75,6 @@
             border: 1px solid #f5c6cb;
         
         }
-
         #produkt {
              width: 100%;
             padding: 0.5rem;
@@ -85,34 +83,51 @@
             border-radius: 5px;
         }
 
+                table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: auto;
+            background-color: white;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #ebe1e1;
+            color: black;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        h1  {
+            text-align: center;
+            margin: 10px;
+        }
     </style>
-  </head>
 </head>
 
 <body>
-    <form method="POST" action="/">
-        {% if message %}
-        <div class="message {% if success %}success{% else %}error{% endif %}">
-            {{ message }}
-        </div>
-        {% endif %}
-            <label for="produkt">Produkt</label>
-            <select id="produkt" name="produkt" required>
-                <option value=""></option>
-                <option value="https://www.ebay.ch/b/PC-Notebooks-Netbooks/177/bn_466644">PC Notebooks</option>
-                <option value="https://www.ebay.ch/b/Apple-Notebooks/111422/bn_466752">Apple Notebooks</option>
-                <option value="https://www.ebay.ch/b/Computer-Tablets-Netzwerk/58058/bn_1845234">Notebooks generell</option>
-            </select>
-            <label for="preis">Preis</label>
-            <input type="number" id="preis" name="preis" required>
+    <h1>Suchresultat</h1>
+    <br>
+    <table>
+        <tr>
+            <th>Produkt</th>
+            <th>Preis</th>
+            <th>Region</th>
+            <th>Link</th>
+        </tr>
+        {% for zeile in daten %}
+        <tr>
+            <td>{{ zeile.produkt }}</td>
+            <td>{{ zeile.preis }}</td>
+            <td>{{ zeile.region }}</td>
+            <td><a href="{{ zeile.link }}" target="_blank">Mehr Info</a></td>
+        </tr>
+        {% endfor %}
+    </table>
 
-            <label for="region">Region</label>
-            <input type="text" id="region" name="region" required>
+</body>
 
-            <button type="submit">Produkt suchen</button>
-     </form>
-     <br>
-     <a href="{{ url_for('seite2') }}">
-    <button>Suchresultat anzeigen</button>
-</a>
 </html>
