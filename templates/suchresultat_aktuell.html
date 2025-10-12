@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Suchresultate – Price Hunter{% endblock %}
+{% block content %}
+
+{% if success %}
+<!-- Toast-Container (oben rechts) -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1080">
+    <div id="saveToast" class="toast align-items-center text-bg-success border-0" role="status" aria-live="polite"
+        aria-atomic="true" data-bs-delay="3500">
+        <div class="d-flex">
+            <div class="toast-body">
+                ✅ {{ message or "Eintrag gespeichert." }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const el = document.getElementById('saveToast');
+        if (el && typeof bootstrap !== 'undefined') {
+            const toast = new bootstrap.Toast(el);
+            toast.show();
+        }
+    });
+</script>
+{% endif %}
+
+<h2 class="text-center mb-4">Suchresultate{% if daten|length == 1 and success %} (neuer Eintrag){% endif %}</h2>
+
+<div class="table-responsive results-wrap">
+    <table class="table table-striped table-hover align-middle js-theme-table table-sticky">
+        <thead class="table-secondary text-dark">
+            <tr>
+                <th>Produkt</th>
+                <!-- 1) Preis linksbündig + 2) Extra Abstand nach rechts -->
+                <th class="text-start pe-4">Preis</th>
+                <th>Region</th>
+                <!-- 3) Link rechtsbündig wie die Buttons -->
+                <th class="text-end" style="padding-right: 70px; min-width: 110px;">Link</th>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for zeile in daten %}
+            <tr>
+                <td class="text-truncate" style="max-width: 420px;">
+                    <a href="{{ zeile.link }}" class="link-body-emphasis text-decoration-none" target="_blank"
+                        rel="noopener" title="{{ zeile.produkt }}">
+                        {{ zeile.produkt }}
+                    </a>
+                </td>
+
+                <!-- 1) Preis links + 2) Extra Abstand rechts -->
+                <td class="text-start pe-4">{{ zeile.preis | chf }}</td>
+
+                <td>
+                    <span class="badge text-bg-secondary">{{ zeile.region }}</span>
+                </td>
+
+                <!-- 3) Buttons rechtsbündig -->
+                <td class="text-end">
+                    {% if zeile.link %}
+                    <a href="{{ zeile.link }}" class="btn btn-sm btn-primary" style="min-width:96px;" target="_blank"
+                        rel="noopener">
+                        Mehr Info
+                    </a>
+                    {% else %}
+                    <span class="text-muted d-inline-block" style="min-width:96px;">—</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if show_all_link %}
+<div class="d-grid d-sm-flex justify-content-sm-end mt-3">
+    <a href="{{ url_for('suchresultat_total') }}" class="btn btn-outline-secondary">Alle gespeicherten Resultate
+        anzeigen</a>
+</div>
+{% endif %}
+
+{% endblock %}
