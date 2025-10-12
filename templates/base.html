@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="de">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Price Hunter{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+    <!-- Custom Styles -->
+    <style>
+        /* Cards: sanfter Look */
+        .card.rounded-4 {
+            border: 0;
+        }
+
+        .shadow-lg {
+            box-shadow: 0 1rem 2rem rgba(0, 0, 0, .08) !important;
+        }
+
+        /* Buttons: leichtes Hover-Lift */
+        .btn {
+            transition: transform .12s ease, box-shadow .12s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        /* Inputs/Selects: klarer Fokus */
+        .form-control:focus,
+        .form-select:focus {
+            box-shadow: 0 0 0 .2rem rgba(var(--bs-primary-rgb), .15);
+            border-color: rgba(var(--bs-primary-rgb), .35);
+        }
+
+        /* Tabellen: angenehmes Hover */
+        .table-hover tbody tr:hover {
+            background-color: var(--bs-secondary-bg);
+        }
+
+        /* Footer: feine Linie */
+        footer {
+            border-top: 1px solid var(--bs-border-color);
+        }
+
+        /* --- NEU: Scrollbarer Tabellen-Container mit Sticky Header --- */
+        .results-wrap {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .table-sticky thead th {
+            position: sticky;
+            top: 0;
+            z-index: 3;
+            background-color: var(--bs-secondary-bg);
+        }
+    </style>
+</head>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand fw-semibold" href="{{ url_for('home') }}">Price Hunter</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div id="nav" class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link {% if active_page=='home' %}active{% endif %}"
+                        href="{{ url_for('home') }}">Start</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_page=='results' %}active{% endif %}"
+                        href="{{ url_for('suchresultat_total') }}">Suchresultate</a>
+                </li>
+            </ul>
+
+            <!-- 🌙 Optional: Light/Dark-Mode Toggle -->
+            <button id="themeToggle" class="btn btn-sm btn-outline-light ms-3" type="button">🌙</button>
+        </div>
+    </div>
+</nav>
+
+<body class="d-flex flex-column min-vh-100 bg-body-tertiary">
+    <main class="flex-fill">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-dark text-white mt-auto" style="height:60px;">
+        <div class="h-100 d-flex align-items-center justify-content-center">
+            <p class="mb-3 fw-semibold lh-1">© 2025 Price Hunter</p>
+        </div>
+    </footer>
+</body>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+
+<script>
+    (function () {
+        const key = 'bs-theme';
+        const btn = document.getElementById('themeToggle');
+
+        // ➕ NEU: Tabellen an Theme anpassen
+        const applyTableTheme = (mode) => {
+            document.querySelectorAll('.js-theme-table').forEach(t => {
+                t.classList.toggle('table-dark', mode === 'dark');
+            });
+        };
+
+        const stored = localStorage.getItem(key);
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const current = stored || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-bs-theme', current);
+        applyTableTheme(current); // ➕ NEU
+
+        const updateButton = (mode) => {
+            if (!btn) return;
+            btn.textContent = (mode === 'dark') ? '☀️' : '🌙';
+            btn.setAttribute('aria-label', (mode === 'dark') ? 'Switch to light mode' : 'Switch to dark mode');
+        };
+        updateButton(current);
+
+        btn?.addEventListener('click', () => {
+            const active = document.documentElement.getAttribute('data-bs-theme') || 'light';
+            const next = (active === 'light') ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-bs-theme', next);
+            localStorage.setItem(key, next);
+            updateButton(next);
+            applyTableTheme(next); // ➕ NEU
+        });
+
+        // Systemwechsel (nur wenn kein User-Override)
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        mq?.addEventListener?.('change', (e) => {
+            if (!localStorage.getItem(key)) {
+                const autoMode = e.matches ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-bs-theme', autoMode);
+                updateButton(autoMode);
+                applyTableTheme(autoMode); // ➕ NEU
+            }
+        });
+    })();
+</script>
+</body>
+
+</html>

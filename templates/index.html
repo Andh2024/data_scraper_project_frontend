@@ -1,118 +1,67 @@
-<!DOCTYPE html>
-<html lang="de">
+{% extends "base.html" %}
+{% block title %}Start – Price Hunter{% endblock %}
+{% block content %}
 
-<head>
-    <meta charset="UTF-8">
+<section class="text-center mt-5">
+    <h1 class="display-6 fw-bold mb-3">Suche Dein Produkt!</h1>
+    <p class="text-secondary mb-3">Vergleiche schneller – speichere Suchläufe und sieh alle Resultate auf einen Blick.
+    </p>
+</section>
 
-    <title>Price Hunter</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #ebe1e1;
-            background: linear-gradient(0deg, rgba(235, 225, 225, 1) 0%, rgba(255, 255, 255, 1) 100%);
-            display: flex; 
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+<div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card shadow-lg rounded-4 border-0">
+            <!-- WICHTIG: card-body sorgt für Innenabstand -->
+            <div class="card-body p-4 p-sm-5">
 
-        form {
-            justify-content: center;
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 320px;
-            margin: 10px;
-        }
+                {% if message %}
+                <div class="alert {% if success %}alert-success{% else %}alert-danger{% endif %} mb-4" role="alert">
+                    {{ message }}
+                </div>
+                {% endif %}
 
-        label {
-            display: block;
-            margin-top: 1rem;
-        }
+                <form method="POST" action="{{ url_for('submit') }}" class="vstack gap-3">
 
-        input[type="text"],
-        input[type="number"] {
-            width: 95%;
-            padding: 0.5rem;
-            margin-top: 0.3rem;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
+                    <!-- Produkt -->
+                    <div>
+                        <label for="produkt" class="form-label">Produkt</label>
+                        <select id="produkt" name="produkt" class="form-select" required>
+                            <option value="" selected disabled>Produkt</option>
+                            <option value="https://www.ebay.ch/b/PC-Notebooks-Netbooks/177/bn_466644">PC Notebooks
+                            </option>
+                            <option value="https://www.ebay.ch/b/Apple-Notebooks/111422/bn_466752">Apple Notebooks
+                            </option>
+                            <option value="https://www.ebay.ch/b/Computer-Tablets-Netzwerk/58058/bn_1845234">Notebooks
+                                generell</option>
+                        </select>
+                    </div>
 
-        button {
-            margin-top: 1.5rem;
-            width: 100%;
-            padding: 0.7rem;
-            background:  #ebe1e1;;
-            border: none;
-            color: black;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+                    <!-- Preis -->
+                    <div>
+                        <label for="preis" class="form-label">Preis</label>
+                        <div class="input-group">
+                            <span class="input-group-text">CHF</span>
+                            <input type="number" id="preis" name="preis" class="form-control" min="0" step="50"
+                                placeholder="z. B. 1200" required>
+                        </div>
+                        <div class="form-text">Ganzzahl oder 50er-Schritte (empfohlen).</div>
+                    </div>
 
-        button:hover {
-            background-color: black;
-            color:white;
+                    <!-- Region -->
+                    <div>
+                        <label for="region" class="form-label">Region</label>
+                        <input type="text" id="region" name="region" class="form-control" placeholder="z. B. Zürich"
+                            required>
+                    </div>
 
-        }
+                    <button type="submit" class="btn btn-dark btn-lg w-100">Produkt suchen</button>
+                    <a href="{{ url_for('suchresultat_total') }}" class="btn btn-outline-secondary w-100">Gespeicherte
+                        Resultate anzeigen</a>
+                </form>
 
-        .message {
-            margin-bottom: 1rem;
-            padding: 0.7rem;
-            border-radius: 5px;
-            text-align: center;
-        }
-
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        
-        }
-
-        #produkt {
-             width: 100%;
-            padding: 0.5rem;
-            margin-top: 0.3rem;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-    </style>
-  </head>
-</head>
-
-<body>
-    <form method="POST" action="/">
-        {% if message %}
-        <div class="message {% if success %}success{% else %}error{% endif %}">
-            {{ message }}
+            </div>
         </div>
-        {% endif %}
-            <label for="produkt">Produkt</label>
-            <select id="produkt" name="produkt" required>
-                <option value=""></option>
-                <option value="https://www.ebay.ch/b/PC-Notebooks-Netbooks/177/bn_466644">PC Notebooks</option>
-                <option value="https://www.ebay.ch/b/Apple-Notebooks/111422/bn_466752">Apple Notebooks</option>
-                <option value="https://www.ebay.ch/b/Computer-Tablets-Netzwerk/58058/bn_1845234">Notebooks generell</option>
-            </select>
-            <label for="preis">Preis</label>
-            <input type="number" id="preis" name="preis" required>
+    </div>
+</div>
 
-            <label for="region">Region</label>
-            <input type="text" id="region" name="region" required>
-
-            <button type="submit">Produkt suchen</button>
-     </form>
-     <br>
-     <a href="{{ url_for('seite2') }}">
-    <button>Suchresultat anzeigen</button>
-</a>
-</html>
+{% endblock %}
