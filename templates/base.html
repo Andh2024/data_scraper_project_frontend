@@ -58,6 +58,16 @@
             z-index: 3;
             background-color: var(--bs-secondary-bg);
         }
+
+        /* Default: Light Mode = dunkle Schrift */
+        thead.table-secondary {
+            --bs-table-color: #212529;
+        }
+
+        /* Dark Mode = helle Schrift */
+        [data-bs-theme="dark"] thead.table-secondary {
+            --bs-table-color: #fff;
+        }
     </style>
 </head>
 
