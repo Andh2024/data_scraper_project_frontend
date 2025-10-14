@@ -11,11 +11,19 @@ from flask import Flask, render_template, request, redirect, url_for, session
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-change-me")
 
+# ===== Input Daten =====
+
 BASE_DIR = Path(__file__).resolve().parent
 CSV_PATH = BASE_DIR / "data.csv"
 REGION_COLOR_FILE = BASE_DIR / "region_colors.json"
 
 CSV_FIELDS = ["Produkt", "Preis", "Region", "Link"]
+
+# ===== Output Daten =====
+
+CSV_DATA_PATH = Path("data_output.csv")
+CSV_DATA_PATH = BASE_DIR / "data_output.csv"
+CSV_DATA_FIELDS = ["Produkt", "Link", "Preis", "Region"]
 
 
 # -----------------------------------------------------------------------------
@@ -45,22 +53,30 @@ def append_row(produkt_url: str, preis: str, region: str) -> None:
         )
 
 
-def load_rows_for_table() -> List[Dict[str, Any]]:
-    """Lädt alle Zeilen aus der CSV als Liste von Dicts."""
-    ensure_csv_with_header()
-    rows: List[Dict[str, Any]] = []
-    with CSV_PATH.open("r", newline="", encoding="utf-8") as f:
+def load_rows_for_table():
+    """Liest CSV und liefert Zeilen im Format für die Tabelle (zeile.*)."""
+    if not CSV_DATA_PATH.exists() or CSV_DATA_PATH.stat().st_size == 0:
+        return []
+    rows = []
+    with CSV_DATA_PATH.open("r", newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for r in reader:
+            produkt = (r.get("Produkt") or "").strip()
+            preis = (r.get("Preis") or "").strip()
+            region = (r.get("Region") or "").strip()
+            produkt_url = (r.get("Link") or "").strip()
             rows.append(
                 {
-                    "produkt": r.get("Produkt", ""),
-                    "preis": r.get("Preis", ""),
-                    "region": r.get("Region", ""),
-                    "link": r.get("Link", "") or r.get("Produkt", ""),
+                    "produkt": produkt,
+                    "preis": preis,
+                    "region": region,
+                    "link": produkt_url,
                 }
             )
     return rows
+
+
+# =========================
 
 
 # -----------------------------------------------------------------------------
